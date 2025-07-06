@@ -7,6 +7,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+@app.route('/')
+def index():
+    return '✅ Video Converter Backend is running!'
 
 @app.route('/convert', methods=['POST'])
 def convert():
