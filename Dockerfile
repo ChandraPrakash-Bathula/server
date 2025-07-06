@@ -1,15 +1,17 @@
+# Use official Python base
 FROM python:3.11-slim
 
+# Install FFMPEG
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
+# Set workdir
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# FFmpeg install (Debian example)
-RUN apt-get update && apt-get install -y ffmpeg
-
+# Copy code
 COPY . .
 
-EXPOSE 5000
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+# Gunicorn with 2 workers, 120s timeout
+CMD ["gunicorn", "-w", "2", "-t", "120", "-b", "0.0.0.0:5000", "app:app"]
