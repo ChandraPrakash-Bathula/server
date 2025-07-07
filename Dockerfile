@@ -1,17 +1,17 @@
-# Use official Python base
+# Use Python slim as base image
 FROM python:3.11-slim
 
-# Install FFMPEG
+# Install ffmpeg for video conversions
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
-# Set workdir
+# Set working directory
 WORKDIR /app
 
-# Copy code
+# Copy project files
 COPY . .
 
-# Install dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Gunicorn with 2 workers, 120s timeout
-CMD ["gunicorn", "-w", "2", "-t", "120", "-b", "0.0.0.0:5000", "app:app"]
+# Tell Docker how to run your app
+CMD ["gunicorn", "-w", "2", "-t", "300", "-b", "0.0.0.0:5000", "app:app"]
